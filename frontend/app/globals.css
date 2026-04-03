@@ -27,3 +27,5 @@ html { scroll-behavior: smooth; }
 /* spacing: 1775239002014 */
 
 .pixel-tooltip { position: absolute; background: rgba(0,0,0,0.8); color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; }
+
+*:focus-visible { outline: 2px solid rgba(139, 92, 246, 0.6); outline-offset: 2px; border-radius: 6px; }
