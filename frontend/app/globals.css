@@ -17,3 +17,7 @@ body {
 }
 
 /* colors: 1775238571087 */
+
+/* timing: 1775238772937 */
+
+html { scroll-behavior: smooth; }

@@ -130,3 +130,5 @@ export default function PixelCanvas() {
     </div>
   );
 }
+
+// canvas: 1775238829483
