@@ -21,3 +21,5 @@ body {
 /* timing: 1775238772937 */
 
 html { scroll-behavior: smooth; }
+
+::selection { background: rgba(139, 92, 246, 0.25); color: #fff; }
