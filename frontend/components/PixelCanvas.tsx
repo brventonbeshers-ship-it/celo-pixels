@@ -1,0 +1,132 @@
+"use client";
+
+import { useState, useRef, useEffect } from "react";
+import { useAccount, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
+import { contractConfig } from "@/lib/contract";
+import { GRID_SIZE } from "@/lib/config";
+
+const COLORS = [
+  "#000000", "#FFFFFF", "#FF0000", "#00FF00", "#0000FF",
+  "#FFFF00", "#FF00FF", "#00FFFF", "#FF8800", "#8800FF",
+  "#FF0088", "#00FF88", "#0088FF", "#88FF00", "#FF4444",
+  "#44FF44",
+];
+
+function hexToUint24(hex: string): number {
+  return parseInt(hex.replace("#", ""), 16);
+}
+
+export default function PixelCanvas() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { isConnected } = useAccount();
+  const [selectedColor, setSelectedColor] = useState(COLORS[2]);
+  const [hoveredPixel, setHoveredPixel] = useState<{ x: number; y: number } | null>(null);
+
+  const { writeContract, data: hash, isPending } = useWriteContract();
+  const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash });
+
+  const pixelSize = 10;
+  const canvasSize = GRID_SIZE * pixelSize;
+
+  useEffect(() => {
+    drawGrid();
+  }, []);
+
+  useEffect(() => {
+    if (isSuccess) drawGrid();
+  }, [isSuccess]);
+
+  function drawGrid() {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    ctx.fillStyle = "#1a1a2e";
+    ctx.fillRect(0, 0, canvasSize, canvasSize);
+
+    ctx.strokeStyle = "rgba(139, 92, 246, 0.1)";
+    for (let i = 0; i <= GRID_SIZE; i++) {
+      ctx.beginPath();
+      ctx.moveTo(i * pixelSize, 0);
+      ctx.lineTo(i * pixelSize, canvasSize);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(0, i * pixelSize);
+      ctx.lineTo(canvasSize, i * pixelSize);
+      ctx.stroke();
+    }
+  }
+
+  function handleClick(e: React.MouseEvent<HTMLCanvasElement>) {
+    if (!isConnected || isPending || isConfirming) return;
+    const rect = canvasRef.current!.getBoundingClientRect();
+    const x = Math.floor((e.clientX - rect.left) / pixelSize);
+    const y = Math.floor((e.clientY - rect.top) / pixelSize);
+    if (x < 0 || x >= GRID_SIZE || y < 0 || y >= GRID_SIZE) return;
+
+    const color = hexToUint24(selectedColor);
+
+    // Draw immediately for feedback
+    const ctx = canvasRef.current!.getContext("2d")!;
+    ctx.fillStyle = selectedColor;
+    ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
+
+    writeContract({
+      ...contractConfig,
+      functionName: "placePixel",
+      args: [BigInt(x), BigInt(y), color],
+    });
+  }
+
+  function handleMouseMove(e: React.MouseEvent<HTMLCanvasElement>) {
+    const rect = canvasRef.current!.getBoundingClientRect();
+    const x = Math.floor((e.clientX - rect.left) / pixelSize);
+    const y = Math.floor((e.clientY - rect.top) / pixelSize);
+    if (x >= 0 && x < GRID_SIZE && y >= 0 && y < GRID_SIZE) {
+      setHoveredPixel({ x, y });
+    } else {
+      setHoveredPixel(null);
+    }
+  }
+
+  const busy = isPending || isConfirming;
+
+  return (
+    <div className="flex flex-col items-center gap-6">
+      <div className="glass-card p-4">
+        <canvas
+          ref={canvasRef}
+          width={canvasSize}
+          height={canvasSize}
+          onClick={handleClick}
+          onMouseMove={handleMouseMove}
+          className={`cursor-crosshair ${busy ? "opacity-50 pointer-events-none" : ""}`}
+        />
+      </div>
+
+      {/* Color picker */}
+      <div className="glass-card p-4">
+        <div className="flex flex-wrap gap-2 justify-center">
+          {COLORS.map((color) => (
+            <button
+              key={color}
+              onClick={() => setSelectedColor(color)}
+              className={`w-8 h-8 rounded-lg border-2 transition-transform hover:scale-110 ${
+                selectedColor === color ? "border-white scale-110" : "border-transparent"
+              }`}
+              style={{ backgroundColor: color }}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Status */}
+      <div className="text-sm text-gray-400">
+        {hoveredPixel && `(${hoveredPixel.x}, ${hoveredPixel.y})`}
+        {busy && " — Placing pixel..."}
+        {!isConnected && " — Connect wallet to place pixels"}
+      </div>
+    </div>
+  );
+}

@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a0a2e 50%, #0a0a0a 100%);
+  min-height: 100vh;
+}
+
+.glass-card {
+  @apply bg-dark-card backdrop-blur-md border border-dark-border rounded-2xl;
+}
+
+.btn-primary {
+  @apply bg-gradient-to-r from-primary to-accent text-white font-semibold py-3 px-6 rounded-xl
+         hover:shadow-glow transition-all duration-300 hover:scale-105 active:scale-95;
+}

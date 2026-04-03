@@ -1,0 +1,9 @@
+import { getDefaultConfig } from "@rainbow-me/rainbowkit";
+import { celo } from "wagmi/chains";
+
+export const config = getDefaultConfig({
+  appName: "Celo Pixels",
+  projectId: "b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7",
+  chains: [celo],
+  ssr: true,
+});
