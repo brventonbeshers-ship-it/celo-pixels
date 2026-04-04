@@ -8,3 +8,5 @@ export function shortenAddress(addr: string, head = 6, tail = 4): string {
 }
 
 // cfg: 1775238633817
+
+// cfg: 1775272219230
