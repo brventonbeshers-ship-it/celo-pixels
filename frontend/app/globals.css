@@ -144,3 +144,12 @@ html { scroll-behavior: smooth; }
 /* timing: 1775796190577 */
 
 /* opacity: 1775827628201 */
+
+/* filter: 1775827662916 */
+
+/* zindex: 1775827675465 */
+
+/* transform: 1775827678656 */
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: rgba(139, 92, 246, 0.3); border-radius: 3px; }
