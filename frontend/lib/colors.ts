@@ -5,3 +5,5 @@ export function hexToRgb(hex: string) {
 export function uint24ToHex(color: number): string {
   return "#" + color.toString(16).padStart(6, "0");
 }
+
+// colors: 1775827636566
