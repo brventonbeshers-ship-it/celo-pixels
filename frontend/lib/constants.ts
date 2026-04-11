@@ -4,3 +4,5 @@ export const PIXEL_SIZE = 10;
 export const CELO_EXPLORER = "https://celoscan.io";
 
 // const: 1775827772859
+
+// const: 1775870814606
