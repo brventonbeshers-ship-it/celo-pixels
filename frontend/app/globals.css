@@ -229,3 +229,12 @@ html { scroll-behavior: smooth; }
 /* radius: 1775919799392 */
 
 /* border: 1775919805749 */
+
+/* spacing: 1775965944887 */
+
+/* font: 1775965952455 */
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: rgba(139, 92, 246, 0.3); border-radius: 3px; }
+
+/* radius: 1775965964005 */
