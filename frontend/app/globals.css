@@ -258,3 +258,10 @@ html { scroll-behavior: smooth; }
 /* shadow: 1775966187901 */
 
 /* transition: 1775966204571 */
+
+/* timing: 1776045757420 */
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: rgba(139, 92, 246, 0.3); border-radius: 3px; }
+
+/* spacing: 1776045781475 */
