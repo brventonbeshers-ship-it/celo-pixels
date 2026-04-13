@@ -1,4 +1,20 @@
-import { CONTRACT_ADDRESS } from "./config";
+import { CONTRACT_ADDRESS, CELO_RPC } from "./config";
+import {
+  CeloPixelsClient,
+  CELO_PIXELS_ABI as SDK_ABI,
+  GRID_SIZE as SDK_GRID_SIZE,
+} from "celo-pixels-sdk";
+export type { PixelData, UserStats } from "celo-pixels-sdk";
+
+const client = new CeloPixelsClient({
+  contractAddress: CONTRACT_ADDRESS,
+  rpcUrl: CELO_RPC,
+});
+
+export const getPixelColor = (x: number, y: number) => client.getPixel(x, y);
+export const getUserPixelStats = (address: string) => client.getUserStats(address);
+export const getTotalPixels = () => client.getTotalPixels();
+export const getGridSize = () => client.getGridSize();
 
 export const CELO_PIXELS_ABI = [
   {
