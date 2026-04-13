@@ -9,7 +9,6 @@ jobs:
   matrix-install:
     name: Validate Install (Node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
-    continue-on-error: true
     strategy:
       fail-fast: false
       matrix:
@@ -28,12 +27,10 @@ jobs:
       - name: Install celo-pixels-sdk package
         working-directory: validation-suite
         run: npm install celo-pixels-sdk
-        continue-on-error: true
 
       - name: Resolve module path
         working-directory: validation-suite
         run: node -e "console.log('Module path:', require.resolve('celo-pixels-sdk'));"
-        continue-on-error: true
 
       - name: Enumerate exported members
         working-directory: validation-suite
@@ -44,7 +41,6 @@ jobs:
             console.log('Exported members (' + members.length + '):');
             members.forEach(m => console.log('  *', m, '->', typeof pkg[m]));
           "
-        continue-on-error: true
 
       - name: Test dynamic import
         working-directory: validation-suite
@@ -59,7 +55,6 @@ jobs:
               console.log('Require fallback OK');
             });
           "
-        continue-on-error: true
 
       - name: Read package metadata
         working-directory: validation-suite
@@ -74,12 +69,10 @@ jobs:
             console.log('License:', meta.license || 'N/A');
             console.log('Dependencies:', Object.keys(meta.dependencies || {}).length);
           "
-        continue-on-error: true
 
   stress-test:
     name: Stress Iteration ${{ matrix.iteration }}
     runs-on: ubuntu-latest
-    continue-on-error: true
     strategy:
       fail-fast: false
       matrix:
@@ -96,9 +89,7 @@ jobs:
           npm init -y
           npm install celo-pixels-sdk
           node -e "const s = require('celo-pixels-sdk'); console.log('Iteration ${{ matrix.iteration }}: loaded', Object.keys(s).length, 'exports');"
-        continue-on-error: true
 
       - name: Check dependency tree
         working-directory: test-${{ matrix.iteration }}
         run: npm ls celo-pixels-sdk
-        continue-on-error: true
