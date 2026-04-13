@@ -328,3 +328,12 @@ html { scroll-behavior: smooth; }
 /* spacing: 1776083263599 */
 
 /* cursor: 1776083267782 */
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: rgba(139, 92, 246, 0.3); border-radius: 3px; }
+
+/* shadow: 1776083312180 */
+
+/* transition: 1776083318543 */
+
+/* colors: 1776083320715 */
