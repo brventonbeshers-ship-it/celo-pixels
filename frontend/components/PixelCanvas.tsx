@@ -3,7 +3,8 @@
 import { useState, useRef, useEffect } from "react";
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { contractConfig } from "@/lib/contract";
-import { GRID_SIZE } from "@/lib/config";
+import { GRID_SIZE, MINIPAY_FEE_CURRENCY } from "@/lib/config";
+import { useMiniPay } from "@/hooks/useMiniPay";
 
 const COLORS = [
   "#000000", "#FFFFFF", "#FF0000", "#00FF00", "#0000FF",
@@ -19,6 +20,7 @@ function hexToUint24(hex: string): number {
 export default function PixelCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { isConnected } = useAccount();
+  const { isMiniPay } = useMiniPay();
   const [selectedColor, setSelectedColor] = useState(COLORS[2]);
   const [hoveredPixel, setHoveredPixel] = useState<{ x: number; y: number } | null>(null);
 
@@ -76,6 +78,7 @@ export default function PixelCanvas() {
       ...contractConfig,
       functionName: "placePixel",
       args: [BigInt(x), BigInt(y), color],
+      ...(isMiniPay ? { feeCurrency: MINIPAY_FEE_CURRENCY } : {}),
     });
   }
 
