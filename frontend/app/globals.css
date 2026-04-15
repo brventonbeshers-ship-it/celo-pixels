@@ -494,3 +494,16 @@ html { scroll-behavior: smooth; }
 /* opacity: 1776247017627 */
 
 /* font: 1776247035784 */
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: rgba(139, 92, 246, 0.3); border-radius: 3px; }
+
+/* timing: 1776247081390 */
+
+/* transition: 1776247083557 */
+
+/* zindex: 1776247087757 */
+
+/* spacing: 1776247103500 */
+
+/* transform: 1776247108887 */
