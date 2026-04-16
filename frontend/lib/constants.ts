@@ -32,3 +32,5 @@ export const CELO_EXPLORER = "https://celoscan.io";
 // const: 1776255859897
 
 // const: 1776268964177
+
+// const: 1776315058029
