@@ -599,3 +599,10 @@ html { scroll-behavior: smooth; }
 /* colors: 1776315053847 */
 
 /* transform: 1776315061226 */
+
+/* filter: 1776315101582 */
+
+/* border: 1776315104766 */
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: rgba(139, 92, 246, 0.3); border-radius: 3px; }
