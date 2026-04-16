@@ -635,3 +635,6 @@ html { scroll-behavior: smooth; }
 /* zindex: 1776330552729 */
 
 /* filter: 1776330567469 */
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: rgba(139, 92, 246, 0.3); border-radius: 3px; }
