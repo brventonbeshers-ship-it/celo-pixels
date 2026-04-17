@@ -5,6 +5,7 @@ import { useAccount, useWriteContract, useWaitForTransactionReceipt } from "wagm
 import { contractConfig } from "@/lib/contract";
 import { GRID_SIZE, MINIPAY_FEE_CURRENCY } from "@/lib/config";
 import { useMiniPay } from "@/hooks/useMiniPay";
+import { celo } from "viem/chains";
 
 const COLORS = [
   "#000000", "#FFFFFF", "#FF0000", "#00FF00", "#0000FF",
@@ -19,12 +20,13 @@ function hexToUint24(hex: string): number {
 
 export default function PixelCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const { isConnected } = useAccount();
+  const { address, isConnected } = useAccount();
   const { isMiniPay } = useMiniPay();
   const [selectedColor, setSelectedColor] = useState(COLORS[2]);
   const [hoveredPixel, setHoveredPixel] = useState<{ x: number; y: number } | null>(null);
+  const [txError, setTxError] = useState<string | null>(null);
 
-  const { writeContract, data: hash, isPending } = useWriteContract();
+  const { writeContractAsync, data: hash, isPending } = useWriteContract();
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash });
 
   const pixelSize = 10;
@@ -60,8 +62,8 @@ export default function PixelCanvas() {
     }
   }
 
-  function handleClick(e: React.MouseEvent<HTMLCanvasElement>) {
-    if (!isConnected || isPending || isConfirming) return;
+  async function handleClick(e: React.MouseEvent<HTMLCanvasElement>) {
+    if (!isConnected || !address || isPending || isConfirming) return;
     const rect = canvasRef.current!.getBoundingClientRect();
     const x = Math.floor((e.clientX - rect.left) / pixelSize);
     const y = Math.floor((e.clientY - rect.top) / pixelSize);
@@ -74,12 +76,20 @@ export default function PixelCanvas() {
     ctx.fillStyle = selectedColor;
     ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
 
-    writeContract({
-      ...contractConfig,
-      functionName: "placePixel",
-      args: [BigInt(x), BigInt(y), color],
-      ...(isMiniPay ? { feeCurrency: MINIPAY_FEE_CURRENCY } : {}),
-    });
+    setTxError(null);
+    try {
+      await writeContractAsync({
+        ...contractConfig,
+        account: address,
+        chainId: celo.id,
+        functionName: "placePixel",
+        args: [BigInt(x), BigInt(y), color],
+        ...(isMiniPay ? { feeCurrency: MINIPAY_FEE_CURRENCY } : {}),
+      } as Parameters<typeof writeContractAsync>[0]);
+    } catch (error) {
+      setTxError(error instanceof Error ? error.message.slice(0, 180) : "Transaction rejected or failed.");
+      drawGrid();
+    }
   }
 
   function handleMouseMove(e: React.MouseEvent<HTMLCanvasElement>) {
@@ -130,6 +140,7 @@ export default function PixelCanvas() {
         {busy && " — Placing pixel..."}
         {!isConnected && " — Connect wallet to place pixels"}
       </div>
+      {txError && <p className="max-w-md text-center text-sm text-red-400">{txError}</p>}
     </div>
   );
 }
