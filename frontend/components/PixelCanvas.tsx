@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { useAccount, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
+import { useAccount, useSendTransaction, useWaitForTransactionReceipt } from "wagmi";
+import { encodeFunctionData } from "viem";
 import { contractConfig } from "@/lib/contract";
 import { GRID_SIZE, MINIPAY_FEE_CURRENCY } from "@/lib/config";
 import { useMiniPay } from "@/hooks/useMiniPay";
@@ -26,7 +27,7 @@ export default function PixelCanvas() {
   const [hoveredPixel, setHoveredPixel] = useState<{ x: number; y: number } | null>(null);
   const [txError, setTxError] = useState<string | null>(null);
 
-  const { writeContractAsync, data: hash, isPending } = useWriteContract();
+  const { sendTransactionAsync, data: hash, isPending } = useSendTransaction();
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash });
 
   const pixelSize = 10;
@@ -78,14 +79,18 @@ export default function PixelCanvas() {
 
     setTxError(null);
     try {
-      await writeContractAsync({
-        ...contractConfig,
-        account: address,
-        chainId: celo.id,
+      const data = encodeFunctionData({
+        abi: contractConfig.abi,
         functionName: "placePixel",
         args: [BigInt(x), BigInt(y), color],
+      });
+
+      await sendTransactionAsync({
+        account: address,
+        to: contractConfig.address,
+        data,
         ...(isMiniPay ? { feeCurrency: MINIPAY_FEE_CURRENCY } : {}),
-      } as Parameters<typeof writeContractAsync>[0]);
+      } as Parameters<typeof sendTransactionAsync>[0]);
     } catch (error) {
       setTxError(error instanceof Error ? error.message.slice(0, 180) : "Transaction rejected or failed.");
       drawGrid();
