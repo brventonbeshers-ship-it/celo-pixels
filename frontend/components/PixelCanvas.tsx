@@ -4,9 +4,9 @@ import { useState, useRef, useEffect } from "react";
 import { useAccount, useSendTransaction, useWaitForTransactionReceipt } from "wagmi";
 import { encodeFunctionData } from "viem";
 import { contractConfig } from "@/lib/contract";
-import { GRID_SIZE, MINIPAY_FEE_CURRENCY } from "@/lib/config";
+import { GRID_SIZE } from "@/lib/config";
 import { useMiniPay } from "@/hooks/useMiniPay";
-import { celo } from "viem/chains";
+import { sendMiniPayTransaction } from "@/lib/minipayTx";
 
 const COLORS = [
   "#000000", "#FFFFFF", "#FF0000", "#00FF00", "#0000FF",
@@ -26,9 +26,10 @@ export default function PixelCanvas() {
   const [selectedColor, setSelectedColor] = useState(COLORS[2]);
   const [hoveredPixel, setHoveredPixel] = useState<{ x: number; y: number } | null>(null);
   const [txError, setTxError] = useState<string | null>(null);
+  const [miniPayHash, setMiniPayHash] = useState<`0x${string}`>();
 
   const { sendTransactionAsync, data: hash, isPending } = useSendTransaction();
-  const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash });
+  const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash: miniPayHash ?? hash });
 
   const pixelSize = 10;
   const canvasSize = GRID_SIZE * pixelSize;
@@ -78,6 +79,7 @@ export default function PixelCanvas() {
     ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
 
     setTxError(null);
+    setMiniPayHash(undefined);
     try {
       const data = encodeFunctionData({
         abi: contractConfig.abi,
@@ -85,12 +87,16 @@ export default function PixelCanvas() {
         args: [BigInt(x), BigInt(y), color],
       });
 
-      await sendTransactionAsync({
-        account: address,
-        to: contractConfig.address,
-        data,
-        ...(isMiniPay ? { feeCurrency: MINIPAY_FEE_CURRENCY } : {}),
-      } as Parameters<typeof sendTransactionAsync>[0]);
+      if (isMiniPay) {
+        const nextHash = await sendMiniPayTransaction(contractConfig.address, data);
+        setMiniPayHash(nextHash);
+      } else {
+        await sendTransactionAsync({
+          account: address,
+          to: contractConfig.address,
+          data,
+        } as Parameters<typeof sendTransactionAsync>[0]);
+      }
     } catch (error) {
       setTxError(error instanceof Error ? error.message.slice(0, 180) : "Transaction rejected or failed.");
       drawGrid();
