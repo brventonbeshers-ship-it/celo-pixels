@@ -867,3 +867,12 @@ html { scroll-behavior: smooth; }
 /* filter: 1776548354967 */
 
 /* zindex: 1776548360432 */
+
+/* opacity: 1776548398995 */
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: rgba(139, 92, 246, 0.3); border-radius: 3px; }
+
+/* shadow: 1776548416204 */
+
+/* border: 1776548422694 */
