@@ -954,3 +954,16 @@ html { scroll-behavior: smooth; }
 /* timing: 1776642980206 */
 
 /* colors: 1776642988745 */
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: rgba(139, 92, 246, 0.3); border-radius: 3px; }
+
+/* shadow: 1776643037968 */
+
+/* radius: 1776643045474 */
+
+/* border: 1776643050723 */
+
+/* font: 1776643064466 */
+
+/* transition: 1776643069724 */
