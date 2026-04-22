@@ -1194,3 +1194,10 @@ html { scroll-behavior: smooth; }
 /* font: 1776832938443 */
 
 /* spacing: 1776832945940 */
+
+/* cursor: 1776832989358 */
+
+/* transition: 1776832997826 */
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: rgba(139, 92, 246, 0.3); border-radius: 3px; }
