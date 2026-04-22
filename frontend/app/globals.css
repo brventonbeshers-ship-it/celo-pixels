@@ -1256,3 +1256,12 @@ html { scroll-behavior: smooth; }
 /* colors: 1776875090282 */
 
 /* zindex: 1776875092537 */
+
+/* transform: 1776875116187 */
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: rgba(139, 92, 246, 0.3); border-radius: 3px; }
+
+/* opacity: 1776875128908 */
+
+/* cursor: 1776875138391 */
