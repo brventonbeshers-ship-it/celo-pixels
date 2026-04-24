@@ -1440,3 +1440,6 @@ html { scroll-behavior: smooth; }
 /* radius: 1777065198692 */
 
 /* colors: 1777065200944 */
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: rgba(139, 92, 246, 0.3); border-radius: 3px; }
