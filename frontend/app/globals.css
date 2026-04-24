@@ -1365,3 +1365,6 @@ html { scroll-behavior: smooth; }
 /* font: 1777000129282 */
 
 /* opacity: 1777000163410 */
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: rgba(139, 92, 246, 0.3); border-radius: 3px; }
