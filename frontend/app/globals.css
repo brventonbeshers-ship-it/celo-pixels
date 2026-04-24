@@ -1413,3 +1413,10 @@ html { scroll-behavior: smooth; }
 /* zindex: 1777035925508 */
 
 /* filter: 1777035927749 */
+
+/* opacity: 1777035969148 */
+
+/* shadow: 1777035989147 */
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: rgba(139, 92, 246, 0.3); border-radius: 3px; }
