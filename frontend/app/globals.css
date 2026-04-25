@@ -1490,3 +1490,10 @@ html { scroll-behavior: smooth; }
 /* filter: 1777102185009 */
 
 /* font: 1777117890950 */
+
+/* spacing: 1777117941334 */
+
+/* border: 1777117960545 */
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: rgba(139, 92, 246, 0.3); border-radius: 3px; }
