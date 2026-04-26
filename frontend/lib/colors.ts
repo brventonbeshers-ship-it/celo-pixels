@@ -103,3 +103,5 @@ export function uint24ToHex(color: number): string {
 // colors: 1777117885709
 
 // colors: 1777182801316
+
+// colors: 1777192938907
